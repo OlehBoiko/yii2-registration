@@ -93,3 +93,16 @@ a.desc:after {
 .mr-top-margin-alert{
     margin-top: 60px;
 }
+
+.navbar-brand {
+    float: left;
+    height: 50px;
+    font-size: 18px;
+    line-height: 20px;
+    padding: 0px;
+}
+.navbar-brand > img{
+    height: 50px;
+    border-radius: 100%;
+    border: 2px solid #fff;
+}

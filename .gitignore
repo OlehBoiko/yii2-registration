@@ -25,3 +25,6 @@ composer.phar
 phpunit.phar
 # local phpunit config
 /phpunit.xml
+.gitignore
+selection010-be498286bd.png
+selection010-fef0e20462.png

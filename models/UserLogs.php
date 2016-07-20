@@ -12,11 +12,11 @@ use yii\db\Expression;
  *
  * @property integer $id
  * @property integer $id_user
- * @property string  $event_text
- * @property string  $date_create
- * @property string  $date_update
+ * @property string $event_text
+ * @property string $date_create
+ * @property string $date_update
  *
- * @property User    $user
+ * @property User $user
  */
 class UserLogs extends ActiveRecord
 {
@@ -90,15 +90,16 @@ class UserLogs extends ActiveRecord
      *
      * @param $text
      *
+     * @param null $user
      * @return bool
      */
-    public static function setLog($text)
+    public static function setLog($text, $user = null)
     {
         $class = self::className();
         $log = new $class;
         /* @var $log UserLogs */
-        if (!\Yii::$app->user->isGuest) {
-            $log->id_user = \Yii::$app->user->getId();
+        if (!\Yii::$app->user->isGuest || !empty($user)) {
+            $log->id_user = isset($user->id) ? $user->id : \Yii::$app->user->getId();
             $log->event_text = strip_tags($text);
             return $log->save();
         }

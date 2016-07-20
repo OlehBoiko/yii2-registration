@@ -6,6 +6,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
+use yii\helpers\Url;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 
@@ -24,14 +25,14 @@ AppAsset::register($this);
 <body>
 <?php $this->beginBody() ?>
 
-<?php if(Yii::$app->getSession()->getFlash('error')): ?>
-    <div class="bb-alert alert alert-danger mr-top-margin-alert"  style="display: block">
+<?php if (Yii::$app->getSession()->getFlash('error')): ?>
+    <div class="bb-alert alert alert-danger mr-top-margin-alert" style="display: block">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        <?php if(is_array(Yii::$app->getSession()->getFlash('error'))): ?>
+        <?php if (is_array(Yii::$app->getSession()->getFlash('error'))): ?>
             <ul>
                 <?php foreach (Yii::$app->getSession()->getFlash('error') as $k => $items): ?>
                     <?php foreach ($items as $msg): ?>
-                        <li> <span><?= $msg ?></span></li>
+                        <li><span><?= $msg ?></span></li>
                     <?php endforeach; ?>
                 <?php endforeach; ?>
             </ul>
@@ -41,8 +42,8 @@ AppAsset::register($this);
     </div>
 <?php endif ?>
 
-<?php if(Yii::$app->getSession()->getFlash('success')): ?>
-    <div class="bb-alert alert alert-success mr-top-margin-alert"  style="display: block">
+<?php if (Yii::$app->getSession()->getFlash('success')): ?>
+    <div class="bb-alert alert alert-success mr-top-margin-alert" style="display: block">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
         <span><?= Yii::$app->getSession()->getFlash('success') ?></span>
     </div>
@@ -51,26 +52,26 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => 'My Company',
-        'brandUrl' => Yii::$app->homeUrl,
+        'brandLabel' => Yii::$app->user->isGuest ? 'Yii2 registration' : "<img src='" . \Yii::$app->user->identity->getImageUrl() . "' class='img-responsive' height='60px' >",
+        'brandUrl' => Yii::$app->user->isGuest ? Yii::$app->homeUrl : Url::to('user/view', true),
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
 
- if( Yii::$app->user->isGuest ){
-     $items_menu =[
-         ['label' => 'Sign Up', 'url' => ['/site/sign-up']],
-         ['label' => 'Login', 'url' => ['/site/login']]
-     ];
- }else{
-     $items_menu =[
-         ['label' => 'Edit', 'url' => ['/user/update']],
-         ['label' => 'History', 'url' => ['/user/history']],
-         ['label' => 'Logout (' . Yii::$app->user->identity->name . ')', 'url' => ['/site/logout']]
-     ];
- }
 
+    if (Yii::$app->user->isGuest) {
+        $items_menu = [
+            ['label' => 'Sign Up', 'url' => ['/site/sign-up']],
+            ['label' => 'Login', 'url' => ['/site/login']]
+        ];
+    } else {
+        $items_menu = [
+            ['label' => 'Edit', 'url' => ['/user/update']],
+            ['label' => 'History', 'url' => ['/user/history']],
+            ['label' => 'Logout (' . Yii::$app->user->identity->name . ')', 'url' => ['/site/logout']]
+        ];
+    }
 
 
     echo Nav::widget([
@@ -90,9 +91,8 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+        <p class="pull-left">&copy; MackRais <?= date('Y') ?></p>
 
-        <p class="pull-right"><?= Yii::powered() ?></p>
     </div>
 </footer>
 

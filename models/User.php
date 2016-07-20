@@ -7,6 +7,7 @@ use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\db\Expression;
+use yii\helpers\Url;
 use yii\web\IdentityInterface;
 
 
@@ -27,11 +28,11 @@ use yii\web\IdentityInterface;
  *
  * @property UserLogs[] $userLogs
  */
-
 class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE = 1;
+    const DEFAULT_AVATAR = '/default_images/default_avatar.png';
 
     /**
      * @inheritdoc
@@ -166,7 +167,7 @@ class User extends ActiveRecord implements IdentityInterface
         }
         $expire = Yii::$app->params['user.passwordResetTokenExpire'];
         $parts = explode('_', $token);
-        $timestamp = (int) end($parts);
+        $timestamp = (int)end($parts);
         return $timestamp + $expire >= time();
     }
 
@@ -216,7 +217,6 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
 
-
     /**
      * Generates "remember me" authentication key
      */
@@ -239,6 +239,18 @@ class User extends ActiveRecord implements IdentityInterface
     public function setActive()
     {
         $this->status = self::STATUS_ACTIVE;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getImageUrl()
+    {
+        if (isset($this->avatar) && !empty($this->avatar)) {
+            return Url::to("{$this->avatar}", true);
+        }
+        return Url::to(self::DEFAULT_AVATAR, true);
     }
 
 

@@ -64,7 +64,7 @@ class SiteController extends Controller
      */
     public function actionSignUp()
     {
-        if(!Yii::$app->user->isGuest ){
+        if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
 
@@ -78,11 +78,11 @@ class SiteController extends Controller
                     " Yii2 registration: welcome & let’s get started", $user);
 
                 if (!empty($result)) {
-                    UserLogs::setLog('User successful registered');
+                    UserLogs::setLog('User successful registered', $user);
                     \Yii::$app->getSession()->setFlash('success',
                         'You have successfully registered. Please check your e-mail');
                 } else {
-                    UserLogs::setLog('User successful registered.  But an error sending ');
+                    UserLogs::setLog('User successful registered.  But an error sending ', $user);
                     \Yii::$app->getSession()->setFlash('error',
                         'You have successfully registered. But an error sending. Please contact the site administrator');
                 }
@@ -90,8 +90,8 @@ class SiteController extends Controller
             } else {
                 \Yii::$app->getSession()->setFlash('error',
                     'There was an error with registration. Please contact the site administrator');
-                return $this->goHome();
             }
+            return $this->goHome();
         }
 
         return $this->render('signup', [

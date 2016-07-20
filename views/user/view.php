@@ -1,7 +1,6 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\User */
@@ -14,32 +13,25 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
+    <div>
+        <img src="<?=  $model->getImageUrl() ?>">
+    </div>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'name',
-            'avatar',
-            'password',
-            'auth_key',
-            'token',
-            'email:email',
-            'about_me',
-            'status',
-            'date_create',
-            'date_update',
-        ],
-    ]) ?>
+    <div>
+        <strong><?= $model->getAttributeLabel('id') ?></strong> <?= $model->id ?>
+    </div>
+    <div>
+        <strong><?= $model->getAttributeLabel('name') ?></strong> <?= $model->name ?>
+    </div>
+    <div>
+        <strong><?= $model->getAttributeLabel('email') ?></strong> <?= $model->email ?>
+    </div>
+    <div>
+        <strong><?= $model->getAttributeLabel('date_create') ?></strong> <?= $model->date_create ?>
+    </div>
+    <div>
+        <strong><?= $model->getAttributeLabel('date_update') ?></strong> <?= $model->date_update ?>
+    </div>
+
 
 </div>

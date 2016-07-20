@@ -9,6 +9,7 @@
  * @var $model \app\models\User
  * @var $url string
  */
+$current_url = "{$url}/user/confirm?token={$model->token}";
 ?>
 
 <h1>
@@ -17,4 +18,6 @@
 </h1>
 
 <h3>To activate your account click the link below</h3>
-<a href="<?= $url ?>/user/confirm?token=<?= $model->token ?>"><?= $url ?>/user/confirm?token=<?= $model->token ?></a>
+<a href="<?= $current_url ?>">
+    <?= $current_url ?>
+</a>

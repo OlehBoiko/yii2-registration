@@ -2,30 +2,36 @@
 
 namespace app\controllers;
 
+
 use Yii;
 use app\models\User;
+use yii\data\ActiveDataProvider;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
+use app\models\forms\UserEdit;
+use app\models\UserLogs;
 
-/**
- * UserController implements the CRUD actions for User model.
- */
+
 class UserController extends Controller
 {
+
     /**
-     * @inheritdoc
+     * @param \yii\base\Action $action
+     * @return bool
+     * @throws ForbiddenHttpException
+     * @throws \yii\web\BadRequestHttpException
      */
-    public function behaviors()
+    public function beforeAction($action)
     {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
+        if (parent::beforeAction($action)) {
+            if (\Yii::$app->user->isGuest) {
+                throw new ForbiddenHttpException('The requested page does not exist.');
+            }
+            return parent::beforeAction($action);
+        }
+        return true;
+
     }
 
     /**
@@ -41,17 +47,19 @@ class UserController extends Controller
 
         /* @var $user User */
 
-        if(!empty($user)){
+        if (!empty($user)) {
             $user->generateToken();
             $user->setActive();
-            if($user->save()){
+            if ($user->save()) {
                 \Yii::$app->getSession()->setFlash('success',
                     'You have successfully confirmed. Now you can login.');
-            }else{
+                UserLogs::setLog('User successful confirmed.', $user);
+            } else {
                 \Yii::$app->getSession()->setFlash('error',
                     'There was an error with confirm. Please contact the site administrator');
+                UserLogs::setLog('User error confirmed.', $user);
             }
-        }else{
+        } else {
             \Yii::$app->getSession()->setFlash('error',
                 'Incorrect confirmation link. Please contact the site administrator');
         }
@@ -59,29 +67,37 @@ class UserController extends Controller
     }
 
 
-
     /**
      * Displays a single User model.
-     * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
+    public function actionView()
     {
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $this->findModel(\Yii::$app->user->getId()),
         ]);
     }
 
     /**
-     * Displays a single User model.
-     * @param integer $id
-     * @return mixed
+     * All histories
+     * @return string
      */
-    public function actionHistory($id)
+    public function actionHistory()
     {
+        $dataProvider = new ActiveDataProvider([
+            'query' => UserLogs::find()->where(['id_user' => \Yii::$app->user->getId()]),
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'date_create' => SORT_DESC,
+                ]
+            ],
+        ]);
 
         return $this->render('history', [
-            'model' => $this->findModel($id),
+            'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -95,13 +111,24 @@ class UserController extends Controller
     {
         $model = $this->findModel(\Yii::$app->user->getId());
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+        /* @var $model UserEdit */
+
+        $model->old_password = $model->password;
+        $model->password = '';
+
+        if ($model->load(Yii::$app->request->post())) {
+            $model->uploadAvatar(Yii::$app->request->post(), $model);
+
+            if ($model->validate()) {
+                if ($model->save()) {
+                    UserLogs::setLog('Update profile');
+                    return $this->redirect(['view']);
+                }
+            }
         }
+        return $this->render('update', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -113,7 +140,7 @@ class UserController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = User::findOne($id)) !== null) {
+        if (($model = UserEdit::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
