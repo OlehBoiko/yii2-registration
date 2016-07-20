@@ -25,7 +25,7 @@ AppAsset::register($this);
 <?php $this->beginBody() ?>
 
 <?php if(Yii::$app->getSession()->getFlash('error')): ?>
-    <div class="bb-alert alert alert-danger"  style="display: block">
+    <div class="bb-alert alert alert-danger mr-top-margin-alert"  style="display: block">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
         <?php if(is_array(Yii::$app->getSession()->getFlash('error'))): ?>
             <ul>
@@ -42,7 +42,7 @@ AppAsset::register($this);
 <?php endif ?>
 
 <?php if(Yii::$app->getSession()->getFlash('success')): ?>
-    <div class="bb-alert alert alert-success"  style="display: block">
+    <div class="bb-alert alert alert-success mr-top-margin-alert"  style="display: block">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
         <span><?= Yii::$app->getSession()->getFlash('success') ?></span>
     </div>
@@ -57,25 +57,25 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
+
+ if( Yii::$app->user->isGuest ){
+     $items_menu =[
+         ['label' => 'Sign Up', 'url' => ['/site/sign-up']],
+         ['label' => 'Login', 'url' => ['/site/login']]
+     ];
+ }else{
+     $items_menu =[
+         ['label' => 'Edit', 'url' => ['/user/update']],
+         ['label' => 'History', 'url' => ['/user/history']],
+         ['label' => 'Logout (' . Yii::$app->user->identity->name . ')', 'url' => ['/site/logout']]
+     ];
+ }
+
+
+
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
-            Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login']]
-            ) : (
-                '<li>'
-                . Html::beginForm(['/site/logout'], 'post', ['class' => 'navbar-form'])
-                . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link']
-                )
-                . Html::endForm()
-                . '</li>'
-            )
-        ],
+        'items' => $items_menu
     ]);
     NavBar::end();
     ?>

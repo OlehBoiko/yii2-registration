@@ -1,7 +1,6 @@
 html,
 body {
     height: 100%;
-    padding-top: 60px;
 }
 
 .wrap {
@@ -89,4 +88,8 @@ a.desc:after {
     border-left: 3px solid #eed3d7;
     padding: 10px 20px;
     margin: 0 0 15px 0;
+}
+
+.mr-top-margin-alert{
+    margin-top: 60px;
 }
