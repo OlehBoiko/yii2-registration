@@ -2,12 +2,12 @@
 
 namespace app\controllers;
 
+use app\models\forms\SignupForm;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
-use app\models\LoginForm;
-use app\models\ContactForm;
+use app\models\forms\LoginForm;
 
 class SiteController extends Controller
 {
@@ -63,9 +63,42 @@ class SiteController extends Controller
         return $this->render('index');
     }
 
-    public function actionSignUp(){
+    /** Sign Up
+     * @return string|\yii\web\Response
+     */
+    public function actionSignUp()
+    {
+        $model = new SignupForm();
+        $data = Yii::$app->request->post();
 
+        if ($model->load($data) && $model->validate()) {
+            if ($user = $model->signup()) {
+
+                if (!empty($user)) {
+                    $result = SignupForm::sendEmail(Yii::$app->params['feedbackEmail'], $model->email,
+                        " Yii2 registration: welcome & let’s get started", $user);
+
+                    if (!empty($result)) {
+                        \Yii::$app->getSession()->setFlash('success',
+                            'You have successfully registered. Please check your e-mail');
+                    } else {
+                        \Yii::$app->getSession()->setFlash('error',
+                            'You have successfully registered. But an error sending. Please contact the site administrator');
+                    }
+                }
+                return $this->goHome();
+            }else{
+                \Yii::$app->getSession()->setFlash('error',
+                    'There was an error with registration. Please contact the site administrator');
+                return $this->goHome();
+            }
+        }
+
+        return $this->render('signup', [
+            'model' => $model,
+        ]);
     }
+
 
     /**
      * Login action.
@@ -99,31 +132,5 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-    /**
-     * Displays contact page.
-     *
-     * @return string
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
 
-            return $this->refresh();
-        }
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
-    }
 }

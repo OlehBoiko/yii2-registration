@@ -24,6 +24,30 @@ AppAsset::register($this);
 <body>
 <?php $this->beginBody() ?>
 
+<?php if(Yii::$app->getSession()->getFlash('error')): ?>
+    <div class="bb-alert alert alert-danger"  style="display: block">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <?php if(is_array(Yii::$app->getSession()->getFlash('error'))): ?>
+            <ul>
+                <?php foreach (Yii::$app->getSession()->getFlash('error') as $k => $items): ?>
+                    <?php foreach ($items as $msg): ?>
+                        <li> <span><?= $msg ?></span></li>
+                    <?php endforeach; ?>
+                <?php endforeach; ?>
+            </ul>
+        <?php else: ?>
+            <span><?= Yii::$app->getSession()->getFlash('error') ?></span>
+        <?php endif ?>
+    </div>
+<?php endif ?>
+
+<?php if(Yii::$app->getSession()->getFlash('success')): ?>
+    <div class="bb-alert alert alert-success"  style="display: block">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <span><?= Yii::$app->getSession()->getFlash('success') ?></span>
+    </div>
+<?php endif ?>
+
 <div class="wrap">
     <?php
     NavBar::begin([
