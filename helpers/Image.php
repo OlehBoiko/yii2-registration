@@ -83,7 +83,14 @@ class Image
     static function cropImageSection($source_image_path, $thumbnail_image_path, $params, $degrees = 0)
     {
         if (file_exists($source_image_path) && is_file($source_image_path)) {
-            list($source_image_width, $source_image_height, $source_image_type) = getimagesize($source_image_path);
+            $source_gd_image = false;
+
+
+            $image_size = getimagesize($source_image_path);
+//            $source_image_width  = isset($image_size[0]) ? $image_size[0] : null;
+//            $source_image_height  = isset($image_size[1]) ? $image_size[1] : null;
+            $source_image_type  = isset($image_size[2]) ? $image_size[2] : null;
+
             switch ($source_image_type) {
                 case IMAGETYPE_GIF:
                     $source_gd_image = imagecreatefromgif($source_image_path);
@@ -109,7 +116,7 @@ class Image
             $thumbnail_gd_image = imagecreatetruecolor($params['width'], $params['height']);
 
             //     imagecopyresampled($thumbnail_gd_image, $rotate, -$params['x'], -$params['y'], 0, 0, $params['origin_w'], $params['origin_h'], $source_image_width, $source_image_height);
-
+            $rotate = null;
             if (isset($degrees)) {
                 $rotate = imagerotate($source_gd_image, $degrees * -1, 0);
             }

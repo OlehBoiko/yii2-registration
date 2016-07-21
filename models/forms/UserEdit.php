@@ -159,6 +159,7 @@ class UserEdit extends User
      */
     public function afterDelete()
     {
+        /* @var $model UserEdit */
         parent::afterDelete();
         $model = self::find()->where(['id' => $this->id])->one();
         if (isset($model)) {

@@ -253,5 +253,11 @@ class User extends ActiveRecord implements IdentityInterface
         return Url::to(self::DEFAULT_AVATAR, true);
     }
 
+    /**
+     * @return User|null
+     */
+    public function getCurrent(){
+        return self::findOne(\Yii::$app->user->getId());
+    }
 
 }

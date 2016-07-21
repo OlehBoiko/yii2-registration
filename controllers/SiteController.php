@@ -3,6 +3,8 @@
 namespace app\controllers;
 
 
+use app\models\forms\ChangePassword;
+use app\models\forms\ForgotPassword;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -131,6 +133,71 @@ class SiteController extends Controller
         UserLogs::setLog('User Logout');
         Yii::$app->user->logout();
         return $this->goHome();
+    }
+
+    /**
+     * Forgot password
+     * @return string|\yii\web\Response
+     */
+    public function actionForgotPassword(){
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+        $model = new ForgotPassword();
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+
+            $result = $model->sendEmail(Yii::$app->params['feedbackEmail'], $model->email,
+                " Yii2 registration: Forgot password");
+
+            if (!empty($result)) {
+
+                \Yii::$app->getSession()->setFlash('success',
+                    'You successfully send the link to forgotten password. Please check your email');
+            } else {
+                \Yii::$app->getSession()->setFlash('error',
+                    'An error sending. Please contact the site administrator');
+            }
+
+            return $this->goBack();
+        }
+
+       return $this->render('forgot-password', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Changed password
+     * @param $token
+     *
+     * @return string|\yii\web\Response
+     */
+    public function actionChangePassword($token){
+
+        $model = new ChangePassword();
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+
+            if($model->setUser($token)){
+
+                if ($model->changePassword()) {
+                    \Yii::$app->getSession()->setFlash('success',
+                        'You successfully changed password. Please login with new password.');
+                } else {
+                    \Yii::$app->getSession()->setFlash('error',
+                        'An error. Please contact the site administrator');
+                }
+            }else{
+                \Yii::$app->getSession()->setFlash('error',
+                    'Improper restoration link!');
+            }
+            return $this->goBack();
+        }
+
+        return $this->render('change-password', [
+            'model' => $model,
+        ]);
     }
 
 

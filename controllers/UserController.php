@@ -67,6 +67,8 @@ class UserController extends Controller
     }
 
 
+
+
     /**
      * Displays a single User model.
      * @return mixed

@@ -106,3 +106,7 @@ a.desc:after {
     border-radius: 100%;
     border: 2px solid #fff;
 }
+.mr-forgot-password{
+    padding-left: 20px;
+    border-left: 1px solid #000;
+}

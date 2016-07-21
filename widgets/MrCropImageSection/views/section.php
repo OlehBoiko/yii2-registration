@@ -6,6 +6,30 @@
  * Time: 14:12
  */
 
+/**
+ * @var $class_block string
+ * @var $plugin_options array
+ * @var $template_image string
+ * @var $model \yii\db\ActiveRecord
+ * @var $attribute string
+ * @var $attribute_x integer
+ * @var $options_x integer
+ * @var $attribute_y integer
+ * @var $options_y integer
+ * @var $attribute_height integer
+ * @var $attribute_width integer
+ * @var $options_height integer
+ * @var $options_width integer
+ * @var $attribute_origin_width integer
+ * @var $options_origin_width integer
+ * @var $attribute_origin_height integer
+ * @var $options_origin_height integer
+ * @var $attribute_scale integer
+ * @var $options_scale integer
+ * @var $attribute_angle integer
+ * @var $options_angle integer
+ */
+
 use yii\helpers\Html;
 use yii\helpers\Json;
 use app\widgets\MrCropImageSection\MrSectionWidgetAsset;

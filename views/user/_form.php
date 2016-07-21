@@ -37,7 +37,7 @@ use app\widgets\MrCropImageSection\ImageCropSection;
             'id_input_file' => 'mr_file_input1',
             'section' => 'section_1'
         ],
-        'template_image' => isset($model->id) && $model->getImageUrl($model->id) ? Html::img($model->getImageUrl($model->id),
+        'template_image' => isset($model->id) && $model->getImageUrl() ? Html::img($model->getImageUrl(),
             ['class' => 'circle-img']) : null
     ])->label(false);
     ?>

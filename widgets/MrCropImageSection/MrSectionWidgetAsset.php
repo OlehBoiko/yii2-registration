@@ -12,7 +12,7 @@ use Yii;
 
 class MrSectionWidgetAsset extends AssetBundle{
 
-    public $sourcePath = '@app/widgets/MrCropImageSection';
+    public $sourcePath = '@app/widgets/MrCropImageSection/assets';
 
     public $css = [
         'css/MrSection.css',

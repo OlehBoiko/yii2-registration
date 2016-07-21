@@ -2,6 +2,8 @@
 
 /* @var $this \yii\web\View */
 /* @var $content string */
+/* @var $user \app\models\User */
+
 
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
@@ -9,6 +11,8 @@ use yii\bootstrap\NavBar;
 use yii\helpers\Url;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
+
+$user = (new \Yii::$app->user->identityClass);
 
 AppAsset::register($this);
 ?>
@@ -52,7 +56,7 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => Yii::$app->user->isGuest ? 'Yii2 registration' : "<img src='" . \Yii::$app->user->identity->getImageUrl() . "' class='img-responsive' height='60px' >",
+        'brandLabel' => Yii::$app->user->isGuest ? 'Yii2 registration' : "<img src='" . $user->getCurrent()->getImageUrl() . "' class='img-responsive' height='60px' >",
         'brandUrl' => Yii::$app->user->isGuest ? Yii::$app->homeUrl : Url::to('user/view', true),
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
@@ -69,7 +73,7 @@ AppAsset::register($this);
         $items_menu = [
             ['label' => 'Edit', 'url' => ['/user/update']],
             ['label' => 'History', 'url' => ['/user/history']],
-            ['label' => 'Logout (' . Yii::$app->user->identity->name . ')', 'url' => ['/site/logout']]
+            ['label' => 'Logout (' . $user->getCurrent()->name. ')', 'url' => ['/site/logout']]
         ];
     }
 

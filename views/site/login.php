@@ -7,6 +7,7 @@
 use yii\captcha\Captcha;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
+use yii\helpers\Url;
 
 $this->title = 'Login';
 $this->params['breadcrumbs'][] = $this->title;
@@ -30,9 +31,14 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= $form->field($model, 'password')->passwordInput() ?>
         <?= $form->field($model, 'captcha')->widget(Captcha::className()) ?>
 
+    <div class="form-group">
         <?= $form->field($model, 'rememberMe')->checkbox([
-            'template' => "<div class=\"col-lg-offset-1 col-lg-3\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
+            'template' => "<div class=\"col-lg-offset-1 col-lg-3 mr-re\">{input} {label} <a class='mr-forgot-password' href='". Url::to('forgot-password',true)."' >".\Yii::t('app','Forgot password?')."</a></div>\n<div class=\"col-lg-8\">{error}</div>",
         ]) ?>
+
+        <div class="col-lg-offset-1 col-lg-3">
+
+        </div>
 
         <div class="form-group">
             <div class="col-lg-offset-1 col-lg-11">
